@@ -26,6 +26,8 @@ async def on_ready():
     DL.CHANNEL = client.get_channel(int(os.getenv('LUNCH_CHANNEL')))
     DC.open_csv()
     DL.open_csv()
+    DC.daily_challenge_check.start()
+    DL.daily_lunch_alert.start()
     print(f'We have logged in as {client.user}')
 
 # process message
