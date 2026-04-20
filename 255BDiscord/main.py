@@ -7,6 +7,7 @@ import discord #Discord사용
 ##내 정의 모듈
 import dailyLunch as DL
 import dailyChallenge as DC
+import dailyQR as DQ
 
 
 # TOKEN
@@ -22,12 +23,18 @@ client = discord.Client(intents=intents)
 # bot start
 @client.event
 async def on_ready():
-    DC.CHANNEL = client.get_channel(int(os.getenv('CHALLENGE_CHANNEL')))
-    DL.CHANNEL = client.get_channel(int(os.getenv('LUNCH_CHANNEL')))
+    DC.CHANNEL_ID = int(os.getenv('CHALLENGE_CHANNEL'))
+    DL.CHANNEL_ID = int(os.getenv('LUNCH_CHANNEL'))
+    DQ.CHANNEL_ID = int(os.getenv('QR_CHANNEL'))
+    DC.CHANNEL = client.get_channel(DC.CHANNEL_ID)
+    DL.CHANNEL = client.get_channel(DL.CHANNEL_ID)
+    DQ.CHANNEL = client.get_channel(DQ.CHANNEL_ID)
+
     DC.open_csv()
     DL.open_csv()
     DC.daily_challenge_check.start()
     DL.daily_lunch_alert.start()
+    DQ.daily_qr_alert.start()
     print(f'We have logged in as {client.user}')
 
 # process message
@@ -43,6 +50,8 @@ async def on_message(message):
                 await DC.process_message(message)
             case DL.CHANNEL_ID:
                 await DL.process_message(message)
+            case DQ.CHANNEL_ID:
+                await DQ.process_message(message)
 
 
 

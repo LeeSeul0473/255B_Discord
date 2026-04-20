@@ -13,8 +13,7 @@ import csv
 ##########data def Section#############
 #######################################
 
-load_dotenv()
-CHANNEL_ID = int(os.getenv('LUNCH_CHANNEL'))
+CHANNEL_ID = 0
 CHANNEL = None
 
 lunch_data = [
