@@ -59,7 +59,7 @@ async def show_lunch(day):
 ##########run Bot#############
 ##############################
 
-@tasks.loop(hours=1)
+@tasks.loop(minutes=1)
 async def daily_lunch_alert():
     if CHANNEL == None:
         return
@@ -69,36 +69,43 @@ async def daily_lunch_alert():
     if day < 0 or day > 4 :
         return
 
-    if now.hour == 9:
+    if now.hour == 9 and now.minute == 40:
         await show_lunch(day)
 
 
 async def process_message(message):
-    print("message start : ", message.content)
-
-    if ("월" in message.content) or ("월요일" in message.content):
-        await show_lunch(0)
-    elif ("화" in message.content) or ("화요일" in message.content):
-        await show_lunch(1)
-    elif ("수" in message.content) or ("수요일" in message.content):
-        await show_lunch(2)
-    elif ("목" in message.content) or ("목요일" in message.content):
-        await show_lunch(3)
-    elif ("금" in message.content) or ("금요일" in message.content):
-        await show_lunch(4)
-
-    elif "이번주" in message.content or "전체" in message.content:
+    # print("message start : ", message.content)
+    if "이번주" in message.content or "전체" in message.content:
         for w in range(5):
             await show_lunch(w)
-
-    else:
-        tz = pytz.timezone("Asia/Seoul")
-        now = datetime.now(tz)
-        day = datetime.now(tz).weekday()
-        if day < 0 or day > 4:
-            await CHANNEL.send("오늘은 점심이 없지! 🤭")
             return
-        else :
-            await show_lunch(day)
+
+    tz = pytz.timezone("Asia/Seoul")
+    now = datetime.now(tz)
+    day = datetime.now(tz).weekday()
+
+    if ("월" in message.content) or ("월요일" in message.content):
+        day = 0
+    elif ("화" in message.content) or ("화요일" in message.content):
+        day = 1
+    elif ("수" in message.content) or ("수요일" in message.content):
+        day = 2
+    elif ("목" in message.content) or ("목요일" in message.content):
+        day = 3
+    elif ("금" in message.content) or ("금요일" in message.content):
+        day = 4
+    elif ("내일" in message.content):
+        day += 1
+    elif ("어제" in message.content):
+        day -= 1
+
+    if day < 0 or day > 4:
+        if (day == datetime.now(tz).weekday()):
+            await CHANNEL.send("오늘은 점심이 없지! 🤭")
+        else:
+            await CHANNEL.send("그날은 점심이 없지! 🤭")
+        return
+    else :
+        await show_lunch(day)
 
 

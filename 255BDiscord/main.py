@@ -44,7 +44,7 @@ async def on_message(message):
         return
 
     if message.content.startswith('/미아') or message.content.startswith('/mc'):
-
+        print("message start : ", message.content)
         match  message.channel.id:
             case DC.CHANNEL_ID:
                 await DC.process_message(message)

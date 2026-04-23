@@ -16,9 +16,12 @@ import csv
 CHANNEL_ID = 0
 CHANNEL = None
 
+load_dotenv()
 PLAYER1 = os.getenv('PLAYER1')
 PLAYER2 = os.getenv('PLAYER2')
 PLAYER3 = os.getenv('PLAYER3')
+PLAYER2_2 = os.getenv('PLAYER2_2')
+PLAYER3_2 = os.getenv('PLAYER3_2')
 
 class State(Enum):
     SUCCESS = '성공!'
@@ -45,22 +48,22 @@ def add_player_stack(message):
         player_stack.append(PLAYER1)
         player_stack.append(PLAYER2)
         player_stack.append(PLAYER3)
-        return
-    if (PLAYER1 not in message.content) & (PLAYER2 not in message.content) & (PLAYER3 not in message.content):
-        player_stack.append(message.author.display_name)
-        return
-    if PLAYER1 in message.content:
+    elif PLAYER1 in message.content:
         player_stack.append(PLAYER1)
-    if PLAYER2 in message.content:
+    elif (PLAYER2 in message.content) or (PLAYER2_2 in message.content):
         player_stack.append(PLAYER2)
-    if PLAYER3 in message.content:
+    elif (PLAYER3 in message.content) or (PLAYER3_2 in message.content):
         player_stack.append(PLAYER3)
+    else:
+        player_stack.append(message.author.display_name)
 
 def add_week_stack(message):
     global week_stack
     if ("월" not in message.content) & ("화" not in message.content) & ("수" not in message.content) & ("목" not in message.content) & ("금" not in message.content):
         tz = pytz.timezone("Asia/Seoul")
         day = datetime.now(tz).weekday()
+        if("어제" in message.content):
+            day -= 1
         if day < 5 :
             week_stack.append(day)
         return
@@ -74,6 +77,7 @@ def add_week_stack(message):
         week_stack.append(3)
     if ("금" in message.content) or ("금요일" in message.content):
         week_stack.append(4)
+
 
 async def print_challenge_state(player):
     global current_challenge_state
@@ -196,14 +200,14 @@ def save_csv():
 ##############################
 ##########run Bot#############
 ##############################
-@tasks.loop(hours=1)
+@tasks.loop(minutes=1)
 async def daily_challenge_check():
     if CHANNEL == None:
         return
 
     tz = pytz.timezone("Asia/Seoul")
     now = datetime.now(tz)
-    if now.hour == 13:
+    if now.hour == 13 and now.minute == 00:
         day = datetime.now(tz).weekday()
         if day == 0 :
             await reset_state()
@@ -214,8 +218,6 @@ async def daily_challenge_check():
 
 
 async def process_message(message):
-    # print("message start : ", message.content)
-
     global player_stack
     global week_stack
 
