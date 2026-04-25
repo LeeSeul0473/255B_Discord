@@ -48,14 +48,19 @@ def add_player_stack(message):
         player_stack.append(PLAYER1)
         player_stack.append(PLAYER2)
         player_stack.append(PLAYER3)
-    elif PLAYER1 in message.content:
-        player_stack.append(PLAYER1)
-    elif (PLAYER2 in message.content) or (PLAYER2_2 in message.content):
-        player_stack.append(PLAYER2)
-    elif (PLAYER3 in message.content) or (PLAYER3_2 in message.content):
-        player_stack.append(PLAYER3)
-    else:
+        return
+
+    if PLAYER1 not in message.content and PLAYER2 not in message.content and PLAYER3 not in message.content and PLAYER2_2 not in message.content and PLAYER3_2 not in message.content:
         player_stack.append(message.author.display_name)
+        return
+
+    if PLAYER1 in message.content:
+        player_stack.append(PLAYER1)
+    if (PLAYER2 in message.content) or (PLAYER2_2 in message.content):
+        player_stack.append(PLAYER2)
+    if (PLAYER3 in message.content) or (PLAYER3_2 in message.content):
+        player_stack.append(PLAYER3)
+
 
 def add_week_stack(message):
     global week_stack
@@ -102,8 +107,8 @@ async def reset_state():
         current_challenge_state[PLAYER1][i] = State.NONE
         current_challenge_state[PLAYER2][i] = State.NONE
         current_challenge_state[PLAYER3][i] = State.NONE
-    await CHANNEL.send("이번주도 힘내요!")
     save_csv()
+    await CHANNEL.send("이번주도 힘내요!")
 
 async def check_yesterday(day):
     global current_challenge_state
@@ -117,7 +122,9 @@ async def check_yesterday(day):
     if current_challenge_state[PLAYER3][day-1] == State.NONE :
         current_challenge_state[PLAYER3][day - 1] = State.FAIL
         message += f"{PLAYER3} "
+    save_csv()
     await CHANNEL.send(message)
+
 
 async def check_week():
     await print_challenge_state(PLAYER1)
@@ -162,6 +169,7 @@ def open_csv():
                     current_challenge_state[PLAYER1][i] = State.SUCCESS
                 case _ :
                     current_challenge_state[PLAYER1][i] = State.NONE
+        print(f"{PLAYER1} 챌린지 데이터 로드 완료. {current_challenge_state[PLAYER1]}")
         for i in range(5) :
             match int(reader[1][i]) :
                 case 0 :
@@ -170,14 +178,16 @@ def open_csv():
                     current_challenge_state[PLAYER2][i] = State.SUCCESS
                 case _ :
                     current_challenge_state[PLAYER2][i] = State.NONE
+        print(f"{PLAYER2} 챌린지 데이터 로드 완료. {current_challenge_state[PLAYER2]}")
         for i in range(5) :
-            match reader[2][i] :
+            match int(reader[2][i]) :
                 case 0 :
-                    current_challenge_state[PLAYER2][i] = State.FAIL
+                    current_challenge_state[PLAYER3][i] = State.FAIL
                 case 1 :
-                    current_challenge_state[PLAYER2][i] = State.SUCCESS
+                    current_challenge_state[PLAYER3][i] = State.SUCCESS
                 case _ :
-                    current_challenge_state[PLAYER2][i] = State.NONE
+                    current_challenge_state[PLAYER3][i] = State.NONE
+        print(f"{PLAYER3} 챌린지 데이터 로드 완료. {current_challenge_state[PLAYER3]}")
 
 def save_csv():
     with open("state.csv", "w", newline='', encoding="utf-8") as f:

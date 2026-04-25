@@ -33,13 +33,13 @@ async def on_ready():
     DL.CHANNEL = client.get_channel(DL.CHANNEL_ID)
     DQ.CHANNEL = client.get_channel(DQ.CHANNEL_ID)
 
-    global BOT_TEST_ID, BOT_TEST_CHANNEL
-    BOT_TEST_ID = int(os.getenv('BOT_TEST_CHANNEL'))
-    BOT_TEST_CHANNEL = client.get_channel(BOT_TEST_ID)
+    # global BOT_TEST_ID, BOT_TEST_CHANNEL
+    # BOT_TEST_ID = int(os.getenv('BOT_TEST_CHANNEL'))
+    # BOT_TEST_CHANNEL = client.get_channel(BOT_TEST_ID)
     # DC.CHANNEL_ID = BOT_TEST_ID
     # DC.CHANNEL = BOT_TEST_CHANNEL
-    DL.CHANNEL_ID = BOT_TEST_ID
-    DL.CHANNEL = BOT_TEST_CHANNEL
+    # DL.CHANNEL_ID = BOT_TEST_ID
+    # DL.CHANNEL = BOT_TEST_CHANNEL
     # DQ.CHANNEL_ID = BOT_TEST_ID
     # DQ.CHANNEL = BOT_TEST_CHANNEL
 
