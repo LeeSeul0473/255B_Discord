@@ -40,11 +40,19 @@ def open_csv():
     #print(lunch_data)
 
 async def show_lunch(day):
-    message = f"# {weekName[day]}요일 메뉴\n## A\n"
+    message = f"# {weekName[day]}요일 메뉴\n"
+
+    if len(lunch_data[day][0]) == 0:
+        message += "## 오늘은 점심이 없지!"
+        await CHANNEL.send(message)
+        return
+
+    message += "## A\n"
     for i in range(2):
         message += f"**{lunch_data[day][i]}**\n"
     for i in range(2,7):
         message += f"{lunch_data[day][i]}\n"
+
     message += "## B\n"
     for i in range(7,9):
         message += f"**{lunch_data[day][i]}**\n"
@@ -78,7 +86,7 @@ async def process_message(message):
     if "이번주" in message.content or "전체" in message.content:
         for w in range(5):
             await show_lunch(w)
-            return
+        return
 
     tz = pytz.timezone("Asia/Seoul")
     now = datetime.now(tz)

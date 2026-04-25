@@ -13,6 +13,9 @@ import dailyQR as DQ
 # TOKEN
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+BOT_TEST_ID = 0
+BOT_TEST_CHANNEL = None
+
 
 # intents, client
 intents = discord.Intents.default()
@@ -29,6 +32,16 @@ async def on_ready():
     DC.CHANNEL = client.get_channel(DC.CHANNEL_ID)
     DL.CHANNEL = client.get_channel(DL.CHANNEL_ID)
     DQ.CHANNEL = client.get_channel(DQ.CHANNEL_ID)
+
+    global BOT_TEST_ID, BOT_TEST_CHANNEL
+    BOT_TEST_ID = int(os.getenv('BOT_TEST_CHANNEL'))
+    BOT_TEST_CHANNEL = client.get_channel(BOT_TEST_ID)
+    # DC.CHANNEL_ID = BOT_TEST_ID
+    # DC.CHANNEL = BOT_TEST_CHANNEL
+    DL.CHANNEL_ID = BOT_TEST_ID
+    DL.CHANNEL = BOT_TEST_CHANNEL
+    # DQ.CHANNEL_ID = BOT_TEST_ID
+    # DQ.CHANNEL = BOT_TEST_CHANNEL
 
     DC.open_csv()
     DL.open_csv()

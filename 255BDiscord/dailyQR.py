@@ -27,6 +27,10 @@ async def daily_qr_alert():
 
     tz = pytz.timezone("Asia/Seoul")
     now = datetime.now(tz)
+    day = datetime.now(tz).weekday()
+
+    if day < 0 or day > 4 :
+        return
 
     #등원알림
     if now.hour == 9 and now.minute == 55:
@@ -43,4 +47,4 @@ async def daily_qr_alert():
             await CHANNEL.send(lines[rand_index])
 
 async def process_message(message):
-    await CHANNEL.send("왜 불러 :) 집 가고 싶어서 그래?")
+    await CHANNEL.send("왜 불러 :) 심심해?")
