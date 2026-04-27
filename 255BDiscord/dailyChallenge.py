@@ -218,10 +218,10 @@ async def daily_challenge_check():
     tz = pytz.timezone("Asia/Seoul")
     now = datetime.now(tz)
     if now.hour == 13 and now.minute == 00:
-        day = datetime.now(tz).weekday()
+        day = now.weekday()
         if day == 0 :
             await reset_state()
-        elif day > 0 & day < 6 :
+        elif day > 0 and day < 6 :
             await check_yesterday(day)
         if day == 5 :
             await check_week()
