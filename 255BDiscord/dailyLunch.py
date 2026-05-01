@@ -43,7 +43,7 @@ async def show_lunch(day):
     message = f"# {weekName[day]}요일 메뉴\n"
 
     if len(lunch_data[day][0]) == 0:
-        message += "## 오늘은 점심이 없지!"
+        message += "## 메뉴 없음!"
         await CHANNEL.send(message)
         return
 
@@ -77,8 +77,9 @@ async def daily_lunch_alert():
     if day < 0 or day > 4 :
         return
 
-    if now.hour == 9 and now.minute == 40:
-        await show_lunch(day)
+    if now.hour == 9 and now.minute == 30:
+        if len(lunch_data[day][0]) != 0:
+            await show_lunch(day)
 
 
 async def process_message(message):

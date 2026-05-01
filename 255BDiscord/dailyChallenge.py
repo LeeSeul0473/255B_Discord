@@ -112,17 +112,30 @@ async def reset_state():
 
 async def check_yesterday(day):
     global current_challenge_state
-    message = f"> ## {weekName[day-1]}요일 챌린지 실패!\n> ### "
+
     if current_challenge_state[PLAYER1][day-1] == State.NONE :
         current_challenge_state[PLAYER1][day - 1] = State.FAIL
-        message += f"{PLAYER1} "
     if current_challenge_state[PLAYER2][day-1] == State.NONE :
         current_challenge_state[PLAYER2][day - 1] = State.FAIL
-        message += f"{PLAYER2} "
     if current_challenge_state[PLAYER3][day-1] == State.NONE :
         current_challenge_state[PLAYER3][day - 1] = State.FAIL
-        message += f"{PLAYER3} "
     save_csv()
+
+    faild_player = []
+    if current_challenge_state[PLAYER1][day-1] == State.FAIL:
+        faild_player.append(PLAYER1)
+    if current_challenge_state[PLAYER2][day-1] == State.FAIL:
+        faild_player.append(PLAYER2)
+    if current_challenge_state[PLAYER3][day-1] == State.FAIL:
+        faild_player.append(PLAYER3)
+
+    message = f"> ## {weekName[day - 1]}요일 챌린지"
+    if len(faild_player) == 0:
+        message += "\n> ### 야호 전원 성공! 🥳"
+    else:
+        message += " 실패!\n> ### "
+        for player in faild_player:
+            message += f"{PLAYER2} "
     await CHANNEL.send(message)
 
 

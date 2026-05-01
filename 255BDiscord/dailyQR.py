@@ -16,6 +16,7 @@ import random
 CHANNEL_ID = 0
 CHANNEL = None
 
+holiday = [501,505,525,603,622,623,624,625,626,717,817,921,922,923,924,925,1005,1009,1225]
 
 ##############################
 ##########run Bot#############
@@ -27,9 +28,13 @@ async def daily_qr_alert():
 
     tz = pytz.timezone("Asia/Seoul")
     now = datetime.now(tz)
-    day = datetime.now(tz).weekday()
+    weekend = datetime.now(tz).weekday()
 
-    if day < 0 or day > 4 :
+    if weekend < 0 or weekend > 4 :
+        return
+
+    if now.month * 100 + now.day in holiday :
+        print("휴일체크!")
         return
 
     #등원알림
