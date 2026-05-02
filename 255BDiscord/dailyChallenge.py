@@ -135,7 +135,7 @@ async def check_yesterday(day):
     else:
         message += " 실패!\n> ### "
         for player in faild_player:
-            message += f"{PLAYER2} "
+            message += f"{player} "
     await CHANNEL.send(message)
 
 

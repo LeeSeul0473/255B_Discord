@@ -54,9 +54,15 @@ async def show_lunch(day):
         message += f"{lunch_data[day][i]}\n"
 
     message += "## B\n"
+    if len(lunch_data[day][7]) == 0:
+        message += "1코너 운영"
     for i in range(7,9):
+        if len(lunch_data[day][i]) == 0:
+            break;
         message += f"**{lunch_data[day][i]}**\n"
     for i in range(9, 14):
+        if len(lunch_data[day][i]) == 0:
+            break;
         message += f"{lunch_data[day][i]}\n"
 
     await CHANNEL.send(message)
